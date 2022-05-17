@@ -1,11 +1,20 @@
 #!/usr/bin/python
 
 import serial
+from multiprocessing import Process
 
-ser = serial.Serial(‘dev/tty/ACM0’, 9600)
+ser = [serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout = 10), serial.Serial('/dev/ttyACM1', baudrate = 9600, timeout = 10)] ##[Uno, Leonardo]
 
-while True:
+def readData(selector):
+    while 1:
+        arduinoData = ser[selector].readline().decode('ascii')
+        print(arduinoData)
+        
 
-input = ser.read()
-
-print (input.decode(“utf-8”))
+if __name__ == '__main__':
+    uno = Process(target = readData, args=(0,))
+    leo = Process(target = readData, args=(1,))
+    uno.start()
+    leo.start()
+    uno.join()
+    leo.join()
