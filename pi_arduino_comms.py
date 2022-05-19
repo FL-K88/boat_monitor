@@ -1,4 +1,4 @@
-## to find current ports: portData = serial.tools.list_ports.comports()
+## to find current ports: portData = serial.tools.list_ports.comports() OR python -m serial.tools.list_ports
 import datetime
 import time
 import serial
@@ -6,9 +6,6 @@ from multiprocessing import Process
 
 ser = [serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout = 10)] ##[Leonardo]
 logData = []
-
-##generate timestamp for data point, then store by hash of mm/yyyy?
-
 def readData(selector):
     while 1:
         arduinoData = ser[selector].readline().decode('ascii')
@@ -21,7 +18,7 @@ def readData(selector):
 
         logData.append(data)
         print(logData[-1])
-        time.sleep(10) ##ultimately change to 3600 (1 hour)
+        time.sleep(5) ##ultimately change to 3600 (1 hour)
         
 
 if __name__ == '__main__':
