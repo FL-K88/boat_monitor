@@ -1,3 +1,4 @@
+## to find current ports: portData = serial.tools.list_ports.comports()
 
 import serial
 from multiprocessing import Process
