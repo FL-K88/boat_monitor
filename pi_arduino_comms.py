@@ -1,5 +1,6 @@
 ## to find current ports: portData = serial.tools.list_ports.comports()
 import datetime
+import time
 import serial
 from multiprocessing import Process
 
@@ -17,9 +18,10 @@ def readData(selector):
         ##drop the earliest element if more than a year's worth of data is stored
         if len(logData) > (24*366):
             del logData[0]
-            
+
         logData.append(data)
         print(logData[-1])
+        time.sleep(10) ##ultimately change to 3600 (1 hour)
         
 
 if __name__ == '__main__':
