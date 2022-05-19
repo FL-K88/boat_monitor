@@ -13,6 +13,11 @@ def readData(selector):
         arduinoData = ser[selector].readline().decode('ascii')
         ##Store data by timestamp
         data = [datetime.datetime.now(), arduinoData]
+
+        ##drop the earliest element if more than a year's worth of data is stored
+        if len(logData) > (24*366):
+            del logData[0]
+            
         logData.append(data)
         print(logData[-1])
         
