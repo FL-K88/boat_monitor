@@ -1,9 +1,8 @@
-#!/usr/bin/python
 
 import serial
 from multiprocessing import Process
 
-ser = [serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout = 10), serial.Serial('/dev/ttyACM1', baudrate = 9600, timeout = 10)] ##[Uno, Leonardo]
+ser = [serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout = 10)] ##[Leonardo]
 
 def readData(selector):
     while 1:
@@ -12,9 +11,9 @@ def readData(selector):
         
 
 if __name__ == '__main__':
-    uno = Process(target = readData, args=(0,))
-    leo = Process(target = readData, args=(1,))
-    uno.start()
+    leo = Process(target = readData, args=(0,))
+    ##uno = Process(target = readData, args=(1,))
+    ##uno.start()
     leo.start()
-    uno.join()
+    ##uno.join()
     leo.join()
