@@ -29,14 +29,14 @@ def readData(selector):
 
 def dailyPlot(logData):
     sl = slice(-24,-1) 
-    data = np.array(logData[sl])
-    np.append(data,logData[-1]) ##accounts for slice not including final element
-    #print(data[0][0])
-    #print(data[-1][0])
-    maxDate = data[0][0] ##assumes logData is ordered with first element earliest
-    minDate = data[-1][0]
+    data = logData[sl]
+    data.append(logData[-1]) ##accounts for slice not including final element
+    ##maxDate = data[0][0] ##assumes logData is ordered with first element earliest
+    ##minDate = data[-1][0]
     ##print(minDate.strftime('%Y-%m-%d'))
     ##print(maxDate.strftime('%Y-%m-%d'))
+    for point in data:
+        x = 
     x = data[:,0].astype(datetime.datetime.strftime('%Y-%m-%d'))
     y = data[:,1]
     print("x:", x)
