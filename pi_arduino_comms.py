@@ -14,6 +14,8 @@ def readData(selector):
         arduinoData = ser[selector].readline().decode('ascii')
         arduinoData = float(arduinoData.strip("\r\n"))
         ##Store data by timestamp
+        if isinstance(arduinoData,float) == False:
+            print("voltage stored as " + str(type(arduinoData)) + ", not float")
         data = [datetime.datetime.now(), arduinoData]
 
         ##drop the earliest element if more than a year's worth of data is stored
@@ -35,20 +37,24 @@ def dailyPlot(logData):
     minDate = data[-1][0]
     ## print(minDate.strftime('%Y-%m-%d'))
     ## print(maxDate.strftime('%Y-%m-%d'))
-    ##i = 0
-    for point in data:
-        x = np.asarray(data)[:,0]
-        ##x.append(i) ##.astype(datetime.datetime.strftime('%Y-%m-%d')
-        y = np.asarray(data)[:,1]
-        ##i+=1
+    x = np.arange(start=0,stop=24,step=1) ## hours offset. Temporary
+    y = np.asarray(data)[:,1]
+    if not isinstance(x, list):
+        x = x.tolist()
+    if not isinstance(y, list):
+        y = y.tolist()
     print("x:", x)
     print("y:", y)
-    plt.plot(x,y,linewidth=2.0)
+    plot = plt.figure()
+    plt.plot(x, y)
+    ##ax.step(x,y,linewidth=2.0)
+    ##ax.set(xlim=(0,24),xticks=np.arange(1,24), ylim=(0,20), yticks=(np.arange(1,20)))
     ##plt.set(xlim=(0, 8), xticks=np.arange(1, 8),
        ##ylim=(0, 8), yticks=np.arange(1, 8))
-    plt.show() 
+
+    plt.show(block = True)
 
 if __name__ == '__main__':
-    leo = Process(target = readData, args=(0,))
-    leo.start()
-    leo.join()
+    p = Process(target = readData, args=(0,))
+    p.start()
+    p.join()
