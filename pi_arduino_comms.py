@@ -32,7 +32,7 @@ def readData(selector):
         if len(logData) > 23:
             dailyPlot(logData)
             exit()
-        time.sleep(1) ##ultimately change to 3600/1 hour
+        time.sleep(1) ##eventually change to 3600/1 hour
 
 def dailyPlot(logData):
     sl = slice(-24,-1) 
@@ -60,7 +60,7 @@ def dailyPlot(logData):
 
 if __name__ == '__main__':
     ##multithreading for lolz. 
-    ##Ultimately going to try separate processes for each battery class, water level monitor
+    ##Ultimately going to try separate processes for each battery class (3), water level monitor (1)
     p = Process(target = readData, args=(0,))
     p.start()
     p.join()
