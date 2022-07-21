@@ -53,7 +53,9 @@ def dailyPlot(logData):
 
     plot = plt.figure()
     plt.plot(x, y)
-    plt.show()
+    plt.savefig("dailyplot.jpg")
+    print("Figure saved to file")
+    ##plt.show()
 
 if __name__ == '__main__':
     ##multithreading for lolz. 
