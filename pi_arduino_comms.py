@@ -6,6 +6,7 @@ from multiprocessing import Process
 import matplotlib
 from matplotlib import pyplot as plt
 import numpy as np
+import classes ##definitions of the assets being monitored
 
 
 ser = [serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout = 10)] ##[Arduino Leonardo]
