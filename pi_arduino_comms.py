@@ -54,7 +54,7 @@ def dailyPlot(logData):
 
     plot = plt.figure()
     plt.plot(x, y)
-    plt.savefig("dailyplot.jpg")
+    plt.savefig("dailyplot_" + str(time.time()) + ".jpg")
     print("Figure saved to file")
     ##plt.show()
 
