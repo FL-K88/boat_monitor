@@ -1,11 +1,13 @@
 ## to find current ports: portData = serial.tools.list_ports.comports() OR python -m serial.tools.list_ports
 import datetime
+from os import getcwd
 import time
 import serial
 from multiprocessing import Process
 import matplotlib
 from matplotlib import pyplot as plt
 import numpy as np
+import pandas as pd
 import classes ##definitions of the assets being monitored
 
 
@@ -23,7 +25,7 @@ def readData(selector):
         ##Store data by timestamp
         data = [datetime.datetime.now(), arduinoData]
 
-        ##drop the earliest element if more than a year's worth of data is stored
+        ##drop the earliest element if more than a year's worth of data is stored ##NOTE: Change to edit at the document level
         if len(logData) > (24*366):
             del logData[0]
 
@@ -32,7 +34,7 @@ def readData(selector):
         if len(logData) > 23:
             dailyPlot(logData)
             exit()
-        time.sleep(1) ##eventually change to 3600/1 hour
+        time.sleep(1) ##In seconds. Eventually change to 3600/1 hour
 
 def dailyPlot(logData):
     sl = slice(-24,-1) 
@@ -57,6 +59,13 @@ def dailyPlot(logData):
     plt.savefig("dailyplot_" + str(time.time()) + ".jpg")
     print("Figure saved to file")
     ##plt.show()
+
+def storeData(logData): ##Not tested
+    if(isinstance(logData, pd.DataFrame)):
+        filename = getcwd() + "/data/" + str(time.localtime(time.time())) + ".csv"
+        logData.to_csv(filename)
+    print("Data logged to " + filename)
+
 
 if __name__ == '__main__':
     ##multithreading for lolz. 
