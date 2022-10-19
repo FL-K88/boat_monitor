@@ -60,12 +60,15 @@ def dailyPlot(logData):
     print("Figure saved to file")
     ##plt.show()
 
-def storeData(logData): ##Not tested
+def storeData(logData): ##Not tested. Try alternate method if log is overwriting data in the csv or this method creates too many files
     if(isinstance(logData, pd.DataFrame)):
         filename = getcwd() + "/data/" + str(time.localtime(time.time())) + ".csv"
         logData.to_csv(filename)
     print("Data logged to " + filename)
 
+##def saveToFile(data):##not tested
+##    with open('datalog.csv','a') as fd:
+##        fd.write(data)
 
 if __name__ == '__main__':
     ##multithreading for lolz. 
