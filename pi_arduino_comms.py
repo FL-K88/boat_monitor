@@ -13,6 +13,8 @@ import classes ##definitions of the assets being monitored
 
 ser = [serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout = 10)] ##[Arduino Leonardo]
 logData = []
+
+####LOGDATA FORMAT: 2022-10-19 01:24:58.752709 voltfloat ######
 def readData(selector):
     while 1:
         ##arduino transmits 1 voltage reading per second to the pi.
