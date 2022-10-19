@@ -1,4 +1,15 @@
 ## to find current ports: portData = serial.tools.list_ports.comports() OR python -m serial.tools.list_ports
+
+
+###OVERVIEW:###
+##sample one data point per hour, per class
+##save results to file
+##sleep
+##@EOD, create report
+##@EOW, create summary
+##IF file entries > 1 year, archive and start new file
+
+
 import datetime
 from os import getcwd
 import time
@@ -10,8 +21,6 @@ import numpy as np
 import pandas as pd
 import classes ##definitions of the assets being monitored
 import random
-
-
 
 logData = []
 
@@ -86,11 +95,21 @@ def simulateData():
             exit()
         time.sleep(1) ##In seconds. Eventually change to 3600/1 hour
 
+def testRun():
+    simulateData
+
+def execute(selector):
+    readData(selector)
 
 if __name__ == '__main__':
     ##multithreading for lolz. 
     ##Ultimately going to try separate processes for each battery class (3), water level monitor (1)
-    ##p = Process(target = readData, args=(0,))
-    p = Process(target = simulateData)
+    ##p = Process(target = execute, args=(0,))
+    p = Process(target = testRun)
     p.start()
     p.join()
+
+
+
+
+
