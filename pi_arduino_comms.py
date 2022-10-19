@@ -9,13 +9,15 @@ from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
 import classes ##definitions of the assets being monitored
+import random
 
 
-ser = [serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout = 10)] ##[Arduino Leonardo]
+
 logData = []
 
 ####LOGDATA FORMAT: 2022-10-19 01:24:58.752709 voltfloat ######
 def readData(selector):
+    ser = [serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout = 10)] ##[Arduino Leonardo]
     while 1:
         ##arduino transmits 1 voltage reading per second to the pi.
         arduinoData = ser[selector].readline().decode('ascii')
@@ -72,9 +74,23 @@ def storeData(logData): ##Not tested. Try alternate method if log is overwriting
 ##    with open('datalog.csv','a') as fd:
 ##        fd.write(data)
 
+
+##allows testing without actively accessing the arduino. Takes place of ReadData
+def simulateData():
+    for i in range(0,23):
+        data = [datetime.datetime.now(), round(random.uniform(15.50, 8.25),2)]
+        logData.append(data)
+        print(logData[-1]) ## print datapoint just added
+        if len(logData) > 23:
+            ##dailyPlot(logData)
+            exit()
+        time.sleep(1) ##In seconds. Eventually change to 3600/1 hour
+
+
 if __name__ == '__main__':
     ##multithreading for lolz. 
     ##Ultimately going to try separate processes for each battery class (3), water level monitor (1)
-    p = Process(target = readData, args=(0,))
+    ##p = Process(target = readData, args=(0,))
+    p = Process(target = simulateData)
     p.start()
     p.join()
