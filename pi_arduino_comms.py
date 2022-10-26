@@ -1,6 +1,5 @@
 ## to find current ports: portData = serial.tools.list_ports.comports() OR python -m serial.tools.list_ports
 
-
 ###OVERVIEW:###
 ##sample one data point per hour, per class
 ##save results to file
@@ -8,7 +7,6 @@
 ##@EOD, create report
 ##@EOW, create summary
 ##IF file entries > 1 year, archive and start new file
-
 
 import datetime
 from os import getcwd
@@ -24,7 +22,7 @@ import random
 
 logData = []
 
-####LOGDATA FORMAT: 2022-10-19 01:24:58.752709 voltfloat ######
+####LOGDATA FORMAT: 2022-10-19 01:24:58.752709 voltagefloat ######
 def readData(selector):
     ser = [serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout = 10)] ##[Arduino Leonardo]
     while 1:
@@ -73,6 +71,31 @@ def dailyPlot(logData):
     print("Figure saved to file")
     ##plt.show()
 
+def weeklyPlot(logData):
+    sl = slice(-168,-1) 
+    data = logData[sl]
+    data.append(logData[-1]) ##accounts for slice not including final element
+    maxDate = data[0][0] ##assumes logData is ordered with first element earliest
+    minDate = data[-1][0]
+
+    ## print(minDate.strftime('%Y-%m-%d'))
+    ## print(maxDate.strftime('%Y-%m-%d'))
+    x = np.arange(start=0,stop=168,step=1) ## time offset. Temporary. Insures chart is getting only ints and floats
+    y = np.asarray(data)[:,1]
+    if not isinstance(x, list):
+        x = x.tolist()
+    if not isinstance(y, list):
+        y = y.tolist()
+    ##print("x:", x)
+    ##print("y:", y)
+
+    plot = plt.figure()
+    plt.plot(x, y)
+    plt.savefig("dailyplot_" + str(time.time()) + ".jpg")
+    print("Figure saved to file")
+    ##plt.show()
+
+
 def storeData(logData): ##Not tested. Try alternate method if log is overwriting data in the csv or this method creates too many files
     if(isinstance(logData, pd.DataFrame)):
         filename = getcwd() + "/data/" + str(time.localtime(time.time())) + ".csv"
@@ -98,7 +121,12 @@ def simulateData():
 def testRun():
     simulateData
 
-def execute(selector):
+    ##monthly/weekly plotting logic here
+    ##dailyPlot(logData)
+    ##weeklyPlot(logData)
+    ##monthlyPlot(logData)
+
+def execute(selector): ##live run
     readData(selector)
 
 if __name__ == '__main__':
