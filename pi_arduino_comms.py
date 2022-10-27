@@ -9,6 +9,8 @@
 ##IF file entries > 1 year, archive and start new file
 
 import datetime
+import csv
+import os
 from os import getcwd
 import time
 import serial
@@ -20,10 +22,10 @@ import pandas as pd
 import classes ##definitions of the assets being monitored
 import random
 
-logData = []
+
 
 ####LOGDATA FORMAT: 2022-10-19 01:24:58.752709 voltagefloat ######
-def readData(selector):
+def readData(logData, selector):
     ser = [serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout = 10)] ##[Arduino Leonardo]
     while 1:
         ##arduino transmits 1 voltage reading per second to the pi.
@@ -98,9 +100,19 @@ def weeklyPlot(logData):
 
 def storeData(logData): ##Not tested. Try alternate method if log is overwriting data in the csv or this method creates too many files
     if(isinstance(logData, pd.DataFrame)):
-        filename = getcwd() + "/data/" + str(time.localtime(time.time())) + ".csv"
-        logData.to_csv(filename)
-    print("Data logged to " + filename)
+        ##filename = getcwd() + "/data/" + str(time.localtime(time.time())) + ".csv"
+        csvFile = os.path() + '\data\log.csv'
+        if os.path.isfile('\data\log.csv'):
+            csvOut = open(os.path.isfile('\data\log.csv'))
+            writer = csv.writer(csvOut)
+            writer.writerows(logData)
+        else: 
+            with open(csvFile, 'wb') as csvfile:
+                writer = csv.writer(csvfile, delimiter=',',
+                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        ##logData.to_csv(filename)
+        csvOut.close()
+    print("Data logged to " ,  getcwd() , "\data\log.csv")
 
 ##def saveToFile(data):##not tested
 ##    with open('datalog.csv','a') as fd:
@@ -108,26 +120,28 @@ def storeData(logData): ##Not tested. Try alternate method if log is overwriting
 
 
 ##allows testing without actively accessing the arduino. Takes place of ReadData
-def simulateData():
-    for i in range(0,23):
+def simulateData(logData, number_of_entries):
+    for i in range(0,number_of_entries - 1):
         data = [datetime.datetime.now(), round(random.uniform(15.50, 8.25),2)]
         logData.append(data)
         print(logData[-1]) ## print datapoint just added
-        if len(logData) > 23:
+        if len(logData) > number_of_entries - 1:
             ##dailyPlot(logData)
             exit()
-        time.sleep(1) ##In seconds. Eventually change to 3600/1 hour
-
+        ##time.sleep(1) ##In seconds. Eventually change to 3600/1 hour
+    return logData
 def testRun():
-    simulateData
-
+    logData = []
+    logData = simulateData(logData, 168)
+    storeData(logData)
     ##monthly/weekly plotting logic here
     ##dailyPlot(logData)
     ##weeklyPlot(logData)
     ##monthlyPlot(logData)
 
 def execute(selector): ##live run
-    readData(selector)
+    logData = []
+    readData(logData, selector)
 
 if __name__ == '__main__':
     ##multithreading for lolz. 
