@@ -104,7 +104,7 @@ def weeklyPlot(logData):
 def storeData(logData): ##Not tested. Try alternate method if log is overwriting data in the csv or this method creates too many files
     if(isinstance(logData, list)):
         ##filename = getcwd() + "/data/" + str(time.localtime(time.time())) + ".csv"
-        csvOut = open(getcwd() + '\\data\\log.csv', mode='a')
+        csvOut = open(getcwd() + '\\data\\log.csv', mode='a', newline='')
         writer = csv.writer(csvOut, delimiter=',')
         writer.writerows(logData)
         csvOut.close()
@@ -113,10 +113,11 @@ def storeData(logData): ##Not tested. Try alternate method if log is overwriting
         print("Error: logData input must be a pandas dataframe.")
 
 def readData():
-    with open(getcwd() + '\\data\\log.csv') as read_file:
+    with open(getcwd() + '\\data\\log.csv', newline='') as read_file:
         csv_reader = csv.reader(read_file)
         data = list(csv_reader)
         print(data)
+        return data
 
 ##allows testing without actively accessing the arduino. Takes place of ReadData
 def simulateData(logData, number_of_entries):
@@ -134,11 +135,11 @@ def testRun():
     logData = []
     logData = simulateData(logData, 168)
     storeData(logData)
-    readData()
+    data = readData()
     ##monthly/weekly plotting logic here
-    ##dailyPlot(logData)
-    ##weeklyPlot(logData)
-    ##monthlyPlot(logData)
+    ##dailyPlot(data)
+    ##weeklyPlot(data)
+    ##monthlyPlot(data)
 
 def execute(selector): ##live run
     logData = []
