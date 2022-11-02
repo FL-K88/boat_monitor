@@ -23,6 +23,9 @@ import classes ##definitions of the assets being monitored
 import random
 
 
+########NOTE: NEED TO CONVERT ALL FILEPATHS TO LINUX/PI)#########
+
+
 
 ####LOGDATA FORMAT: 2022-10-19 01:24:58.752709 voltagefloat ######
 def readData(logData, selector):
@@ -110,7 +113,10 @@ def storeData(logData): ##Not tested. Try alternate method if log is overwriting
         print("Error: logData input must be a pandas dataframe.")
 
 def readData():
-    print("not implemented")
+    with open(getcwd() + '\\data\\log.csv') as read_file:
+        csv_reader = csv.reader(read_file)
+        data = list(csv_reader)
+        print(data)
 
 ##allows testing without actively accessing the arduino. Takes place of ReadData
 def simulateData(logData, number_of_entries):
@@ -128,6 +134,7 @@ def testRun():
     logData = []
     logData = simulateData(logData, 168)
     storeData(logData)
+    readData()
     ##monthly/weekly plotting logic here
     ##dailyPlot(logData)
     ##weeklyPlot(logData)
