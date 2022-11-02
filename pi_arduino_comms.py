@@ -99,25 +99,18 @@ def weeklyPlot(logData):
 
 
 def storeData(logData): ##Not tested. Try alternate method if log is overwriting data in the csv or this method creates too many files
-    if(isinstance(logData, pd.DataFrame)):
+    if(isinstance(logData, list)):
         ##filename = getcwd() + "/data/" + str(time.localtime(time.time())) + ".csv"
-        csvFile = os.path() + '\data\log.csv'
-        if os.path.isfile('\data\log.csv'):
-            csvOut = open(os.path.isfile('\data\log.csv'))
-            writer = csv.writer(csvOut)
-            writer.writerows(logData)
-        else: 
-            with open(csvFile, 'wb') as csvfile:
-                writer = csv.writer(csvfile, delimiter=',',
-                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        ##logData.to_csv(filename)
+        csvOut = open(getcwd() + '\\data\\log.csv', mode='a')
+        writer = csv.writer(csvOut, delimiter=',')
+        writer.writerows(logData)
         csvOut.close()
-    print("Data logged to " ,  getcwd() , "\data\log.csv")
+        print("Data logged to ",  csvOut)
+    else:
+        print("Error: logData input must be a pandas dataframe.")
 
-##def saveToFile(data):##not tested
-##    with open('datalog.csv','a') as fd:
-##        fd.write(data)
-
+def readData():
+    print("not implemented")
 
 ##allows testing without actively accessing the arduino. Takes place of ReadData
 def simulateData(logData, number_of_entries):
@@ -130,6 +123,7 @@ def simulateData(logData, number_of_entries):
             exit()
         ##time.sleep(1) ##In seconds. Eventually change to 3600/1 hour
     return logData
+
 def testRun():
     logData = []
     logData = simulateData(logData, 168)
@@ -142,14 +136,16 @@ def testRun():
 def execute(selector): ##live run
     logData = []
     readData(logData, selector)
+    
 
 if __name__ == '__main__':
     ##multithreading for lolz. 
     ##Ultimately going to try separate processes for each battery class (3), water level monitor (1)
     ##p = Process(target = execute, args=(0,))
-    p = Process(target = testRun)
-    p.start()
-    p.join()
+    ##p = Process(target = testRun)
+    ##p.start()
+    ##p.join()
+    testRun()
 
 
 
