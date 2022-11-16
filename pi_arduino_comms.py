@@ -6,7 +6,7 @@
 ##sleep
 ##@EOD, create report
 ##@EOW, create summary
-##IF file entries > 1 year, archive and start new file
+##IF file entries > 1 year, delete the oldest entries
 
 import datetime
 import csv
@@ -21,11 +21,9 @@ import numpy as np
 import pandas as pd
 import classes ##definitions of the assets being monitored
 import random
-
+import sms_alert
 
 ########NOTE: NEED TO CONVERT ALL FILEPATHS TO LINUX/PI)#########
-
-
 
 ####LOGDATA FORMAT: 2022-10-19 01:24:58.752709 voltagefloat ######
 def readData(logData, selector):
@@ -144,7 +142,6 @@ def testRun():
 def execute(selector): ##live run
     logData = []
     readData(logData, selector)
-    
 
 if __name__ == '__main__':
     ##multithreading for lolz. 
