@@ -26,6 +26,9 @@ import sms_alert
 ########NOTE: NEED TO CONVERT ALL FILEPATHS TO LINUX/PI)#########
 
 ####LOGDATA FORMAT: 2022-10-19 01:24:58.752709 voltagefloat ######
+
+
+CRITICAL_BATTERY_LEVEL = 11.75
 def readData(logData, selector):
     ser = [serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout = 10)] ##[Arduino Leonardo]
     while 1:
@@ -45,6 +48,8 @@ def readData(logData, selector):
 
         logData.append(data)
         print(logData[-1]) ## print datapoint just added
+        if data[1] < CRITICAL_BATTERY_LEVEL:
+            sendAlert(data)
         if len(logData) > 23:
             dailyPlot(logData)
             exit()
@@ -98,6 +103,10 @@ def weeklyPlot(logData):
     print("Figure saved to file")
     ##plt.show()
 
+
+##NOT FINISHED
+def sendAlert(data):
+    print("Alert Here using sms_alert")
 
 def storeData(logData): ##Not tested. Try alternate method if log is overwriting data in the csv or this method creates too many files
     if(isinstance(logData, list)):
