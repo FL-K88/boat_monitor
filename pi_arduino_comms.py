@@ -21,13 +21,12 @@ import numpy as np
 import pandas as pd
 import classes ##definitions of the assets being monitored
 import random
-import sms_alert
-import email
+#import sms_alert
+#import email
 
 ########NOTE: NEED TO CONVERT ALL FILEPATHS TO LINUX/PI)#########
 
 ####LOGDATA FORMAT: 2022-10-19 01:24:58.752709 voltagefloat ######
-
 
 CRITICAL_BATTERY_LEVEL = 11.75
 def readData(logData, selector):
@@ -143,7 +142,7 @@ def testRun():
     logData = []
     logData = simulateData(logData, 168)
     storeData(logData)
-    data = readData()
+    #data = readData()
     ##monthly/weekly plotting logic here
     ##dailyPlot(data)
     ##weeklyPlot(data)
