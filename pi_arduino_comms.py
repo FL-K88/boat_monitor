@@ -21,8 +21,9 @@ import numpy as np
 import pandas as pd
 import classes ##definitions of the assets being monitored
 import random
-#import sms_alert
-#import email
+import sms_alert
+import email
+import socket
 
 ########NOTE: NEED TO CONVERT ALL FILEPATHS TO LINUX/PI)#########
 
