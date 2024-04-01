@@ -48,15 +48,15 @@ def readData(logData, selector):
             del logData[0]
 
         logData.append(data)
-        print(logData[-1]) ## print datapoint just added
-        if data[1] < CRITICAL_BATTERY_LEVEL:
-            sendAlert(data)
+        #print(logData[-1]) ## print datapoint just added
+        checkCriticals(data)
+
         if len(logData) > 23:
             dailyPlot(logData)
             exit()
         time.sleep(1) ##In seconds. Eventually change to 3600/1 hour
 
-def dailyPlot(logData):
+def dailyPlot(logData): ##Replace with alert system
     sl = slice(-24,-1) 
     data = logData[sl]
     data.append(logData[-1]) ##accounts for slice not including final element
@@ -104,15 +104,18 @@ def weeklyPlot(logData):
     print("Figure saved to file")
     ##plt.show()
 
+def checkCriticals(data):
+    if data[1] < CRITICAL_BATTERY_LEVEL:
+        sendAlert(data)
 
 ##NOT FINISHED
 def sendAlert(data):
-    print("Alert Here using sms_alert")
+    return print("Alert Here using sms_alert")
 
 def storeData(logData): ##Not tested. Try alternate method if log is overwriting data in the csv or this method creates too many files
     if(isinstance(logData, list)):
         ##filename = getcwd() + "/data/" + str(time.localtime(time.time())) + ".csv"
-        csvOut = open(getcwd() + '\\data\\log.csv', mode='a', newline='')
+        csvOut = open(getcwd() + '/data/log.csv', mode='a', newline='')
         writer = csv.writer(csvOut, delimiter=',')
         writer.writerows(logData)
         csvOut.close()
@@ -120,12 +123,12 @@ def storeData(logData): ##Not tested. Try alternate method if log is overwriting
     else:
         print("Error: logData input must be a pandas dataframe.")
 
-def readData():
-    with open(getcwd() + '\\data\\log.csv', newline='') as read_file:
-        csv_reader = csv.reader(read_file)
-        data = list(csv_reader)
-        print(data)
-        return data
+#def readData():
+#    with open(getcwd() + '/data/log.csv', newline='') as read_file:
+#        csv_reader = csv.reader(read_file)
+#        data = list(csv_reader)
+#        print(data)
+#        return data
 
 ##allows testing without actively accessing the arduino. Takes place of ReadData
 def simulateData(logData, number_of_entries):
@@ -133,17 +136,18 @@ def simulateData(logData, number_of_entries):
         data = [datetime.datetime.now(), round(random.uniform(15.50, 8.25),2)]
         logData.append(data)
         print(logData[-1]) ## print datapoint just added
+        checkCriticals(data)
         if len(logData) > number_of_entries - 1:
             ##dailyPlot(logData)
             exit()
-        ##time.sleep(1) ##In seconds. Eventually change to 3600/1 hour
+        time.sleep(1) ##In seconds. Eventually change to 3600/1 hour
     return logData
 
 def testRun():
     logData = []
     logData = simulateData(logData, 168)
     storeData(logData)
-    #data = readData()
+    data = readData(logData)
     ##monthly/weekly plotting logic here
     ##dailyPlot(data)
     ##weeklyPlot(data)
@@ -161,6 +165,7 @@ if __name__ == '__main__':
     ##p.start()
     ##p.join()
     testRun()
+
 
 
 
