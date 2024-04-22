@@ -25,11 +25,10 @@ import sms_alert
 import email
 import socket
 
-########NOTE: NEED TO CONVERT ALL FILEPATHS TO LINUX/PI)#########
-
 ####LOGDATA FORMAT: 2022-10-19 01:24:58.752709 voltagefloat ######
 
-CRITICAL_BATTERY_LEVEL = 11.75
+CRITICAL_BATTERY_VALUE = 11.75 ##Increase to about 12.5ish
+CRITICAL_WATER_VALUE = 50
 def readData(logData, selector):
     ser = [serial.Serial('/dev/ttyACM0', baudrate = 9600, timeout = 10)] ##[Arduino Leonardo]
     while 1:
@@ -105,12 +104,12 @@ def weeklyPlot(logData):
     ##plt.show()
 
 def checkCriticals(data):
-    if data[1] < CRITICAL_BATTERY_LEVEL:
+    if data[1] < CRITICAL_BATTERY_VALUE:
         sendAlert(data)
 
 ##NOT FINISHED
 def sendAlert(data):
-    return print("Alert Here using sms_alert")
+    return print("sms_alert")
 
 def storeData(logData): ##Not tested. Try alternate method if log is overwriting data in the csv or this method creates too many files
     if(isinstance(logData, list)):
@@ -123,12 +122,12 @@ def storeData(logData): ##Not tested. Try alternate method if log is overwriting
     else:
         print("Error: logData input must be a pandas dataframe.")
 
-#def readData():
-#    with open(getcwd() + '/data/log.csv', newline='') as read_file:
-#        csv_reader = csv.reader(read_file)
-#        data = list(csv_reader)
-#        print(data)
-#        return data
+def readData():
+    with open(getcwd() + '/data/log.csv', newline='') as read_file:
+        csv_reader = csv.reader(read_file)
+        data = list(csv_reader)
+        print(data)
+        return data
 
 ##allows testing without actively accessing the arduino. Takes place of ReadData
 def simulateData(logData, number_of_entries):
@@ -140,14 +139,14 @@ def simulateData(logData, number_of_entries):
         if len(logData) > number_of_entries - 1:
             ##dailyPlot(logData)
             exit()
-        time.sleep(1) ##In seconds. Eventually change to 3600/1 hour
+        time.sleep(0.1) ##In seconds. Eventually change to 3600/1 hour
     return logData
 
 def testRun():
     logData = []
     logData = simulateData(logData, 168)
     storeData(logData)
-    data = readData(logData)
+    data = readData()
     ##monthly/weekly plotting logic here
     ##dailyPlot(data)
     ##weeklyPlot(data)
@@ -159,7 +158,7 @@ def execute(selector): ##live run
 
 if __name__ == '__main__':
     ##multithreading for lolz. 
-    ##Ultimately going to try separate processes for each battery class (3), water level monitor (1)
+    ##Ultimately going to try separate processes for each battery (12 across 3 classes), water level monitor (1)
     ##p = Process(target = execute, args=(0,))
     ##p = Process(target = testRun)
     ##p.start()
